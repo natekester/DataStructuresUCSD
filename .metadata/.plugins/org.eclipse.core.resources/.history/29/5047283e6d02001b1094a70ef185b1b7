@@ -172,7 +172,7 @@ public class JobQueue {
     }
     
     private void assignJobsToSubmit() {
-        // TODO: replace this original challenge code with a faster algorithm.
+        // TODO: replace this code with a faster algorithm.
         assignedWorker = new int[jobs.length];
         startTime = new long[jobs.length];
         long[] nextFreeTime = new long[numWorkers];

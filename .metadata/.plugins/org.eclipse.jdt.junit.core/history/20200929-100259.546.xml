@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="JobQueueTest" project="_pasted_code_" tests="4" started="4" failures="0" errors="0" ignored="0">
+  <testsuite name="week2.JobQueueTest" time="0.006" displayname="JobQueueTest" uniqueid="[engine:junit-jupiter]/[class:week2.JobQueueTest]">
+    <testcase name="Challenge2" classname="week2.JobQueueTest" time="0.001" displayname="Challenge2()" uniqueid="[engine:junit-jupiter]/[class:week2.JobQueueTest]/[method:Challenge2()]"/>
+    <testcase name="stringTest" classname="week2.JobQueueTest" time="0.0" displayname="stringTest()" uniqueid="[engine:junit-jupiter]/[class:week2.JobQueueTest]/[method:stringTest()]"/>
+    <testcase name="test1" classname="week2.JobQueueTest" time="0.0" displayname="test1()" uniqueid="[engine:junit-jupiter]/[class:week2.JobQueueTest]/[method:test1()]"/>
+    <testcase name="test2" classname="week2.JobQueueTest" time="0.005" displayname="test2()" uniqueid="[engine:junit-jupiter]/[class:week2.JobQueueTest]/[method:test2()]"/>
+  </testsuite>
+</testrun>

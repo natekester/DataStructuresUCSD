@@ -39,22 +39,26 @@ public class TreeHeight {
 	    }
 		//now that the tree is created, let's create
 		//a queue to go down.
-
+		//System.out.println("tree created");
 		queue.add(nodes[root]);
-
+		//System.out.println("started queue");
 		while(queue.isEmpty() != true)
 		{
-
+			//System.out.println("Looping");
 			//we start with root and get the children
 			//every time we loop the breadth should get bigger
 			int newLength = queue.size();
 			for(int i=0; i<newLength;i++ ) {
 				
 				Node currentNode = queue.get(0);
+				//System.out.println("The current parent node is:  "+ currentNode.getPointer());
 				List<Node> children = currentNode.getChildren();
+				//System.out.println("the current node has " + children.size()+ " children.");
+				//System.out.println("the length of children it has is " + currentNode.getChildLength());
 				
 				for(int j=0; j<currentNode.getChildLength();j++) {
-
+					//System.out.println("we are adding child index : "+currentNode.getChildren().get(j) );
+					//System.out.println("Adding to queue:  "+ currentNode.getChildren().get(j).getPointer());
 					queue.add(currentNode.getChildren().get(j));
 					
 				}
@@ -121,6 +125,20 @@ public class TreeHeight {
 			
 			}
 			
+			
+			
+//			Binary search failed me.
+//		    while (low <= high) {
+//		        int mid = (low + high) / 2;
+//		        if (duplicateParent[mid] < i) {
+//		            low = mid + 1;
+//		        } else if (duplicateParent[mid] > i) {
+//		            high = mid - 1;
+//		        } else if (duplicateParent[mid] == i) {
+//		        	isLeaf = false;
+//				       break;
+//		        }
+		    
 		 
 
 			
@@ -131,6 +149,7 @@ public class TreeHeight {
 					leafNodes.add(i);
 				}
 				else {
+					//System.out.println("adding this as a leaf " + i);
 					boolean duplicate = false;
 					for (int each:leafNodes)
 					{
@@ -148,6 +167,11 @@ public class TreeHeight {
 				}
 			}
 			
+
+			
+		System.out.println(leafNodes);
+		//ystem.out.println(parent);
+		//System.out.println("starting to find distance");
 		int maxHeight = 0;
 
 		for (int node:leafNodes) {

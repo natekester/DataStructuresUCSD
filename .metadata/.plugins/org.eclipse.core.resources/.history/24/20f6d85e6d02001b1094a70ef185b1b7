@@ -67,7 +67,9 @@ public class HashSubstring {
                hashPat = (d*hashPat + pat.charAt(i))%q; 
                hashText = (d*hashText + txt.charAt(i))%q; 
            } 
-
+           System.out.println("our first pat hash is: "+hashPat + " for "+pat);
+           System.out.println("our first txt hash is:"+ hashText);
+           
            for (i = 0; i <= txtLen - patLen; i++) 
            { 
          
@@ -99,7 +101,7 @@ public class HashSubstring {
                    if (hashText < 0) {
                    hashText = (hashText + q); 
                    }
-  
+                   System.out.println("our hash is: "+hashText+" for substring: "+ txt.substring(i, (i+patLen)));
                } 
            } 
        
