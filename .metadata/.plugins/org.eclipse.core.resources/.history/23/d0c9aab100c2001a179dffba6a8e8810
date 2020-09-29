@@ -1,0 +1,81 @@
+package week6;
+
+
+import java.util.*;
+
+public class Knapsack {
+    static int optimalWeight(int W, int[] w) {
+        //write you code here
+    	int[][] table = new int[W][w.length];
+    	int value;
+    	
+    	int i = 0;
+    	for( int weight: w) {
+    		table[0][i] = weight;
+    		i++;
+    	}
+    	
+    	
+    	for( int j = 1; j <= W; j++) {// move through each Weight from 1 up to W
+    		value = 0;
+    		int recordValue = 0;
+    		List<Integer> wUsed = new ArrayList<Integer>();
+    		for(int k = 0; k< w.length; k++) {//chech each available bar and add them based on old W/j
+    			int weight = table[0][k];
+    			if( j == 1) {
+    				if(weight ==1) {
+    				value = 1;
+    				table[j][k] = 1;
+    				}
+    				else {
+    					table[j][k] = 0;
+    				}
+    			}
+    			else if(j - weight> 0) {
+    				//call the table and find out which weights are available and the current value
+    				List<Integer> availW = new ArrayList<Integer>();
+    				
+    				//add all available weights to list
+    				
+    				availW.add(table[j-weight][k]); // TODO move to when we add value
+    				
+    				if(table[j-weight][k] == 0 && j- weight >= 0) { // if the weight is available and fits
+    					///get value of that weight
+    					value = table[j-weight][w.length] + weight;
+    				}
+    				else {
+    					//we set the new value to that old value and don't add anything
+    					value =  table[j-weight][w.length];
+    				}
+    				
+    				if(value > recordValue) {
+    					recordValue = value;
+    				}
+    				//add any of the available weights that fit, if they do, add them
+    				//if the new value is higher, replace value and record weights used
+       			}
+
+    		}
+    		//record new value and weights used -- continue
+    		
+    		
+    		
+    	}
+    	
+    	return table[W][w.length];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner("10 3\r\n" + 
+        		"1 4 8");
+        int W, n;
+        W = scanner.nextInt();
+        n = scanner.nextInt();
+        int[] w = new int[n];
+        for (int i = 0; i < n; i++) {
+            w[i] = scanner.nextInt();
+        }
+        System.out.println(optimalWeight(W, w));
+    }
+}
+

@@ -1,0 +1,132 @@
+package assignment1;
+import java.util.*;
+import java.io.*;
+
+public class tree_height {
+    class FastScanner {
+		StringTokenizer tok = new StringTokenizer("");
+		BufferedReader in;
+
+		FastScanner() {
+			in = new BufferedReader(new InputStreamReader(System.in));
+		}
+
+		String next() throws IOException {
+			while (!tok.hasMoreElements())
+				tok = new StringTokenizer(in.readLine());
+			return tok.nextToken();
+		}
+		int nextInt() throws IOException {
+			return Integer.parseInt(next());
+		}
+	}
+
+	public class TreeHeight {
+		int n;
+		int parent[];
+		
+		void read() throws IOException {
+			FastScanner in = new FastScanner();
+			n = in.nextInt();
+			parent = new int[n];
+			for (int i = 0; i < n; i++) {
+				parent[i] = in.nextInt();
+			}
+		}
+
+		static int computeHeight(int n, int[] parent) {
+		    //new strat - find all nodes that don't have anything pointing to them
+			//then iterate through those to the root and find max.
+			
+			
+			//we have a list 0 through n - if those numbers do not show up in the list, it is a leaf
+			
+			//find all leaves - but do not follow the way of them
+			
+			List<Integer> leafNodes = new ArrayList<Integer>();
+			//leafNodes = new int[];
+			for(int i = 0; i< n; i++)
+			 {
+				boolean isLeaf = true;
+				for (int element : parent)
+				{
+				//if i through n is not in the parent, save it to a list
+				
+				    if (element == i) {
+				       isLeaf = false;
+				    }
+				}
+				
+				if(isLeaf == true) {
+					//System.out.println("adding this as a leaf " + i);
+					boolean duplicate = false;
+					for (int each:leafNodes)
+					{
+					 if (parent[each] == parent[i])
+					 {
+						 duplicate = true;
+						 break;
+					 }
+					}
+					if(duplicate=false) {
+						leafNodes.add(i);
+					}
+				}
+			}
+			
+
+				
+			//System.out.println(leafNodes);
+			//ystem.out.println(parent);
+			//System.out.println("starting to find distance");
+			int maxHeight = 0;
+			for (int node:leafNodes) {
+				int height = 0;
+				//System.out.println("we are now on parent node: "+ node + "which has parent node: "+ parent[node]);
+				boolean root = false;
+				
+				while ( root != true) {
+					
+					
+					if ( parent[node] == -1)
+					{
+						root = true;
+					}
+					else
+					{
+						node = parent[node];
+						height++;
+					}
+					
+				}
+				maxHeight = Math.max(maxHeight, height);
+			}
+			//System.out.println("leaf height is " + maxHeight);
+			return maxHeight+1;
+			
+			
+		} // end of the function we're copying
+		
+		
+		
+		
+		
+		
+	}
+
+	static public void main(String[] args) throws IOException {
+            new Thread(null, new Runnable() {
+                    public void run() {
+                        try {
+                            new tree_height().run();
+                        } catch (IOException e) {
+                        }
+                    }
+                }, "1", 1 << 26).start();
+	}
+	public void run() throws IOException {
+		TreeHeight tree = new TreeHeight();
+		tree.read();
+		System.out.println(tree.computeHeight());
+	}
+}

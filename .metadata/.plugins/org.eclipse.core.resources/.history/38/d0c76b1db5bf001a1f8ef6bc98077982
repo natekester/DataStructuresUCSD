@@ -1,0 +1,186 @@
+package week5;
+
+import java.util.*;
+
+class EditDistance {
+	
+  public static int EditDistance(String s, String t) {
+	
+	int[][] table = new int[s.length()][t.length()];
+	int x = 0;
+	int y = 0;
+	int largest = 0;
+	
+	//build LCS table
+	
+	for(char sChar: s.toCharArray()) {
+		for(char tChar: t.toCharArray()) {
+	
+				if(sChar == tChar) {
+					try {
+					table[x][y] = table[x-1][y-1] + 1;
+					}
+					catch(Exception e) {
+					table[x][y] = 1;
+					}
+				}
+				else {
+					int left;
+					try {
+						left = table[x-1][y];
+					}
+					catch(Exception e) {
+						left = 0;
+					}
+					
+					int above;
+					try {
+						above = table[x][y-1];
+					}
+					catch(Exception e) {
+						above = 0;
+					}
+					
+					if( left > above) {
+						largest = left;
+					}
+					else {
+						largest = above;
+					}
+					table[x][y] = largest;
+				}
+					
+				
+			y++;
+			}
+			
+		x++;
+		y=0;
+	}
+	//printing grid
+	for(int i = 0; i<t.length(); i++ )
+	{
+		for(int j = 0; j<s.length();j++) {
+			System.out.print(table[j][i] + " ");
+		}
+		System.out.println();
+	}
+		
+	x = s.length()-1;
+	y = t.length()-1;
+	
+	
+	int ans = table[x][y];
+	int dashCount = 0;
+	int pairCount = 0;
+	
+	
+	int left;
+	int up;
+	int diag;
+	int last= 0;
+	//we then need to navigate up and count
+	while( ans != 0) {
+		System.out.println(x +" "+ y);
+		if( y-1 <0 ) {
+			up =0;
+		}
+		else {
+			up = table[x][y-1];
+		}	
+		if( x-1 <0 ) {
+			left =0;
+		}
+		else {
+			left = table[x-1][y];
+		}
+		if( x-1 <0 || y-1 <0 ) {
+			diag =0;
+		}
+		else {
+			diag = table[x-1][y-1];
+		}
+		
+		
+		System.out.println("comparing characters: " + s.toCharArray()[x] + " "+ t.toCharArray()[y]);
+			if( x>=0 && y>=0 && s.toCharArray()[x] == t.toCharArray()[y]) {
+	
+					ans = diag;
+					last = 0; //0 for diag, 1 for up, 2 for left;
+					x--;
+					y--;
+					pairCount++;
+				
+				
+			}			
+			else if(up == left && diag == ans && diag == left) {
+				
+				ans = diag;
+				last = 0; //0 for diag, 1 for up, 2 for left;
+				x--;
+				y--;
+				
+				dashCount++;
+			
+			
+		}
+			else if (left <= up) {
+				ans = up;
+				dashCount++;
+				y--;
+				last = 1;
+				
+				
+			}
+			else {
+				if(last == 1) {
+					dashCount= dashCount - 1;
+				}
+				ans = left;
+				dashCount++;
+				x--;
+				last = 2;
+				
+				
+			}
+		}
+	System.out.println("X is "+ x+ " and y is "+ y + " and dash is currently  " + dashCount + " pairs "+ pairCount);	
+	if(x>= y && x>=0 && y>=0) {
+		dashCount = dashCount + x + 1;
+	}
+	else if (y >= x && y>=0)
+	{
+		dashCount = dashCount + y +1;
+	}
+	else if (x >= y && x>=0)
+	{
+		dashCount = dashCount + x +1;
+	}
+
+
+	
+    
+	int maxPair;
+	if(s.length() >= t.length()) {
+		maxPair = t.length();
+	}
+	else {
+		maxPair = s.length();
+	}
+
+	
+	return dashCount;
+		
+	}
+	
+
+  
+  public static void main(String args[]) {
+ //   Scanner scan = new Scanner(System.in);
+
+	  String s = "abcdef";
+		String t = "azced";
+    System.out.println(EditDistance(s, t));
+  }
+
+}

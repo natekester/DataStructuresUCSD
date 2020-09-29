@@ -1,0 +1,29 @@
+package assignment1;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+//import com.sun.tools.javac.util.Assert;
+
+class TreeHeightTest {
+
+	@Test
+	void testComputeHeight() {
+		int[] parent = {-1,0,4,0,3};
+		int input = 5;
+		
+		
+		//assert.assertEquals(expected, actual);
+		
+		int height2 = TreeHeight.checkHeight(input, parent);
+		//System.out.println("height check"  + height2);
+		int height = TreeHeight.computeHeight(input, parent);
+		//System.out.println(height2);
+		System.out.println("height mine "  + height);
+		//assertEquals(height, height2);
+		
+	}
+
+}
+//

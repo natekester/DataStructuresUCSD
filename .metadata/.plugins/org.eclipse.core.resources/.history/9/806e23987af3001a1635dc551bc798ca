@@ -1,0 +1,17 @@
+package DemoTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class EditDistanceTest {
+
+	@Test
+	void testEditDistance() {
+		String s = "editing";
+		String t = "distance";
+		assertEquals(demo1.bear(), 1);
+	}
+
+
+}        

@@ -1,0 +1,32 @@
+package assignment3;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
+
+import org.junit.jupiter.api.Test;
+
+class HashChainsTest {
+
+	@Test
+	void test() {
+		HashChains p = new HashChains();
+		HashChains check = new HashChains();
+		try {
+			check.processQueriesCheck();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("next: ");
+		try {
+			p.processQueries();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+}

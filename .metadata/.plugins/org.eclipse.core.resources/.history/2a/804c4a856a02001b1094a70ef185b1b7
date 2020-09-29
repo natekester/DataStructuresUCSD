@@ -1,0 +1,17 @@
+package DemoTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class demo1Test {
+
+	@Test
+	void testEditDistance() {
+
+		assertEquals(demo1.bear(), 1);
+	}
+
+
+}        

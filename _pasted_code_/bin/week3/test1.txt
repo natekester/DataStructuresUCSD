@@ -1,0 +1,32 @@
+28
+add 0 phi
+find 0
+del 0
+find 0
+add 0 phi
+add 10 phie
+find 0
+find 10
+add 100 pho
+find 100
+add 1000 phumb
+find 0
+find 10
+find 100
+find 1000
+del 0
+del 10
+del 100
+del 1000
+find 0
+find 10
+find 100
+find 1000
+add 0 phi
+add 10 phie
+add 100 pho
+add 1000 phumb
+find 0
+find 10
+find 100
+find 1000

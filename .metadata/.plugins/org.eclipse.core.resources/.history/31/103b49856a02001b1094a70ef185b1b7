@@ -1,0 +1,10 @@
+package DemoTest;
+
+public class demo1 {
+	
+	static Integer bear() {
+		return 1;
+		
+	}
+
+}

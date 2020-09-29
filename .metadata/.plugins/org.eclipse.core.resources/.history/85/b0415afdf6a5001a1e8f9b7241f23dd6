@@ -1,0 +1,417 @@
+package assignment3;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class PhoneBook {
+
+    private FastScanner in = new FastScanner();
+    // Keep list of all existing (i.e. not deleted yet) contacts.
+    private List<Contact> contacts = new ArrayList<>();
+    private List<ChainLink> hash = Arrays.asList(new ChainLink[10000]);
+    List<String> outPut = new ArrayList<>(); 
+
+ 
+
+    public static void main(String[] args) {
+        new PhoneBook().processQueries();
+    }
+
+    public Query readQuery() {
+    	try {
+    	String type = in.next();
+    	//System.out.println("our first readline is: ");
+    	//System.out.println(type);
+        int number = in.nextInt();
+        if (type.equals("add")) {
+            String name = in.next();
+            return new Query(type, name, number);
+        } else {
+            return new Query(type, number);
+        }
+    	}
+    	   catch (IOException ioe) 
+        {
+ 	   ioe.printStackTrace();
+ 	   return null;
+        } 
+    	
+    }
+
+    private void writeResponse(String response) {
+        System.out.println(response);
+    }
+    
+    private void processQueryCheck(Query query) {
+        if (query.type.equals("add")) {
+            // if we already have contact with such number,
+            // we should rewrite contact's name
+            boolean wasFound = false;
+            for (Contact contact : contacts)//checking every contact - need hash
+                if (contact.number == query.number) {
+                    contact.name = query.name;
+                    wasFound = true;
+                    break;
+                }
+            // otherwise, just add it -- we should create hash to add it.
+            if (!wasFound)
+                contacts.add(new Contact(query.name, query.number));
+        } else if (query.type.equals("del")) {
+            for (Iterator<Contact> it = contacts.iterator(); it.hasNext(); )
+                if (it.next().number == query.number) {
+                    it.remove();
+                    break;
+                }
+        } else {//this is the find string portion
+            String response = "not found";
+            for (Contact contact: contacts)
+                if (contact.number == query.number) {
+                    response = contact.name;
+                    break;
+                }
+            writeResponse(response);
+            outPut.add(response);
+        }
+    }
+
+    private void processQuery(Query query) {
+    	
+    	//let's make this hash.
+    	//need an array of chains that hold Contacts
+    	//need to make chain class
+    	// make the array
+    	//size 10000 to start - if we fail let's make it dynamic
+    	int hashCode = hashFunction(query.number);
+    	
+        if (query.type.equals("add")) {
+        	//System.out.println("add: "+ hashCode);
+            // if we already have contact with such number,
+            // we should rewrite contact's name
+            boolean wasFound = false;
+            
+           if(hash.get(hashCode) != null) {
+            	ChainLink link = hash.get(hashCode);
+            	boolean hasChild = false;
+            	
+            	do
+            	{
+            		Contact contact = link.getHeldContact();
+            		if(contact.number == query.number)
+            		{
+            			contact.name = query.name;
+                        wasFound = true;
+                        break;
+            		}
+            		else {
+            			try {
+
+            				if(link.getChild() == null)
+            				{
+            					
+            					break;
+            				}
+            				else {
+            					hasChild = true;
+            				}
+            			}
+            			catch(NullPointerException npe) {
+            				System.out.println(" has no child");
+            				break;
+            			}
+            			
+            			if(hasChild = true)
+            			{
+            				link = link.getChild();
+
+            			}
+            			
+            		}
+            	}while(hasChild== true);
+            
+            }
+
+
+            // otherwise, just add it -- we should create hash to add it.
+            if (!wasFound) {
+            	//this is weird and I don't like it. 
+            	//check if we have a link on the hash position - if no link, new link
+            	//if link, add to current link
+            	if(hash.get(hashCode) != null) {
+            		 ChainLink currentLink = hash.get(hashCode);//might throw error
+            		 //find end of link
+            		boolean hasChild;
+                 	do
+                 	{
+                 		
+                 			if(currentLink.getChild() != null)
+                 			{
+                 				currentLink = currentLink.getChild();
+                 				hasChild = true;
+                 			}
+                 			else {
+                 				
+                 				currentLink.setChild( new ChainLink(new Contact(query.name, query.number) ));
+                 				hasChild = false;
+                 			}
+                 			
+                 		
+                 	}while(hasChild);
+            		 
+                 }
+            	else
+                 {
+                	 //if we can't "get" the hashcode position, and it throws error
+                	 hash.set(hashCode, new ChainLink(new Contact(query.name, query.number) ));
+                 	
+                 }
+            	
+            	
+         
+            }
+        } else if (query.type.equals("del")) {
+        	//System.out.println("del: " + hashCode);
+        	//find the number from the query and remove it. i.e. set hash position to null
+        	//check if the position is null: do you only have one contact?
+        	//if one chainlink: remove position from hash
+        	//if more than one chainlink replace the pointers
+        	
+        	if( hash.get(hashCode) != null) {//not empty find chain
+        		 boolean end = false;
+        		 ChainLink current = hash.get(hashCode);
+        		 ChainLink parent = current;
+        		 boolean hasChild;
+        		 int chainIndex = 0;
+        		do {
+        			try {
+
+        				if(current.getChild() == null)
+        				{
+        					hasChild = false;
+        				}
+        				else {
+        					hasChild = true;
+        				}
+        			}
+        			catch(NullPointerException npe) {
+        				System.out.println(" has no child");
+        				hasChild = false;
+        				
+        			}
+        			
+        			if (hasChild == false && chainIndex ==0 && current.getHeldContact().number == query.number )
+        			{
+        				//no children - is the node - remove
+
+        				hash.set(hashCode, null);//only one link, remove it.
+        				break;
+        			}
+        			else if( hasChild == true && current.getHeldContact().number == query.number && chainIndex ==0) {
+        				//has children - is node - point to child
+        				hash.set(hashCode, current.getChild());
+        				break;
+        			}
+        			else if( chainIndex != 0 && current.getHeldContact().number == query.number ) {
+        				//not the root - just remove the pointer of the parent to the child
+        				
+
+        				
+        				parent.setChild(current.getChild());
+        				break;
+        				
+        			}
+        			
+        			
+        			//index goes up, record the parent to enable removal of child
+        			try {
+        			parent = current;
+        			if( current.getChild() != null ) {
+        			current = current.getChild();
+        			}
+        			else{
+        				end = true;// should be null if empty
+        			}
+        			chainIndex++;}
+        			catch(NullPointerException npe) {
+        				end = true; //null pointer means break the while loop.
+    				
+    				}
+        			
+        		}while(end);
+        	}
+        	
+        	}
+
+            else { 
+            	//System.out.println("find: "+ hashCode);// this is the find part
+            String response = "not found";
+            boolean found = false;
+            ChainLink current = hash.get(hashCode);
+            while(found != true) {
+            	if(current == null)
+            	{
+            		found = true;
+            	
+            		break;
+            	}
+            	
+            	if(current.getHeldContact().number == query.number) {
+            		found = true;
+            	
+            		response = current.getHeldContact().name;
+            		break;
+            	}
+            	else {
+            		current = current.getChild();
+            	}
+            	
+            }
+            
+            writeResponse(response);
+            outPut.add(response);
+        }
+    }
+
+    public void processQueries() {
+    	try {
+        int queryCount = in.nextInt();
+        for (int i = 0; i < queryCount; ++i)
+            processQuery(readQuery());
+    	}
+    	   catch (IOException ioe) 
+        {
+ 	   ioe.printStackTrace();
+        } 
+    	
+    }
+    
+    public void processQueriesCheck() {
+    	try {
+        int queryCount = in.nextInt();
+        for (int i = 0; i < queryCount; ++i)
+            processQueryCheck(readQuery());
+    	}
+    	   catch (IOException ioe) 
+        {
+ 	   ioe.printStackTrace();
+        } 
+    	
+    }
+    
+    /**
+     * 
+     * @param phoneNum - the phone number we're entering
+     * @return the hash code position for hash size 1000
+     */
+    static int hashFunction( int phoneNum ){
+
+    	return phoneNum%10;
+    }
+    
+    static int hashFunctionCorrect( int phoneNum ){
+    	int hashSize = 10000; //so this will be our m i.e. x mod m - let's pick 10000
+    	//we might need to make this and the prime dynamic later.
+    	int hashCode;
+    	int prime = 10000019; // we have 10^5 posibilities, we need a prime bigger - hence 10...-19
+    	int a = 31;// a and b are between 1 and P-1 -- doesn't seem to matter much
+    	int b= 2;
+    	
+    	hashCode = (a*phoneNum+b)%prime%hashSize; // linear hash key equation.
+    	
+    	return hashCode;
+    }
+    
+    
+    static class ChainLink{
+    	//holds a child and a contact
+    	private ChainLink child;
+    	private Contact heldContact; 
+    	
+    	public void setChild(ChainLink kid) {
+    		child = kid;
+    	}
+    	
+    	public ChainLink getChild() {
+    		if (child == null) {
+    			return null;
+    		}
+    		else {
+    		return child;
+    		}
+    	}
+    	
+    	public ChainLink( Contact contact) {
+    		setHeldContact(contact);
+    	}
+
+		public Contact getHeldContact() {
+			return heldContact;
+		}
+
+		public void setHeldContact(Contact heldContact) {
+			this.heldContact = heldContact;
+		}
+    	
+    }
+
+    static class Contact {
+        String name;
+        int number;
+
+        public Contact(String name, int number) {
+            this.name = name;
+            this.number = number;
+        }
+    }
+
+    static class Query {
+        String type;
+        String name;
+        int number;
+
+        public Query(String type, String name, int number) {
+            this.type = type;
+            this.name = name;
+            this.number = number;
+        }
+
+        public Query(String type, int number) {
+            this.type = type;
+            this.number = number;
+        }
+    }
+
+    static class FastScanner {
+        private BufferedReader reader;
+        private StringTokenizer tokenizer;
+
+        public FastScanner() {
+        	try {
+        		
+            reader = new BufferedReader(new FileReader("C:\\Users\\NateyBoi\\Desktop\\Java Stuff\\Workspace for Datastructures\\_pasted_code_\\src\\assignment3\\HashChainsTest.txt"));
+            tokenizer = null;}
+            catch (IOException ioe) 
+            {
+     	   ioe.printStackTrace();
+            } 
+        	
+        }
+
+        public String next() throws IOException {
+            while (tokenizer == null || !tokenizer.hasMoreTokens()) {
+                tokenizer = new StringTokenizer(reader.readLine());
+            }
+            return tokenizer.nextToken();
+        }
+
+        public int nextInt() throws IOException {
+            return Integer.parseInt(next());
+        }
+    }
+}

@@ -1,0 +1,9 @@
+package DemoTest;
+
+public class demo1 {
+	
+	static void bear() {
+		
+	}
+
+}

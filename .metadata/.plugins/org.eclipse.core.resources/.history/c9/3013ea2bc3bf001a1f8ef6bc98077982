@@ -1,0 +1,124 @@
+package week5;
+
+import java.util.*;
+
+class EditDistance {
+	
+  public static int EditDistance(String s, String t) {
+	
+	int[][] table = new int[s.length()][t.length()];
+	int x = 0;
+	int y = 0;
+	int diag = 0;
+	int left = 0;
+	int up = 0;
+	int min = 1000;
+	
+	//build LCS table
+	for( int i = 0; i<s.length(); i++ )
+	{
+		for( int j =0 ; j<t.length(); j++)
+		{
+			min = 1000;
+			try {
+				diag = table[i-1][j-1];
+				
+			}
+			catch(Exception e){
+				diag = 0;
+			}
+			try {
+				up = table[i][j-1];
+				
+			}
+			catch(Exception e){
+				up = 0;
+			}
+			try {
+				left = table[i-1][j];
+				
+			}
+			catch(Exception e){
+				left = 0;
+			}
+			
+			if(left == 0) {
+				min = up;
+			}
+			else if (up == 0){
+				min = left;
+			}
+			else {
+				if( left <= diag && left <= up)
+				{
+					min = left;
+				}
+				else if ( up <= left && up <= diag) {
+					min = up;
+				}
+				else {
+					min = diag;
+				}
+			}
+
+			
+			
+			char sChar;
+			char tChar;
+			try {
+				sChar = s.toCharArray()[i-1];
+			}
+			catch (Exception e) {
+				sChar = '&';
+			}
+			try {
+				tChar = t.toCharArray()[j-1];
+			}
+			catch (Exception e) {
+				tChar = '%';
+			}
+			
+			
+			if(sChar == tChar)
+			{
+				System.out.println("we just matched on i: "+ i + " and j: "+ j+ " with char: "+ sChar+ " and "+ tChar);
+				table[i][j] = diag;
+			}
+			else if(i==0 && j==0) {
+				table[i][j] = min;
+			}
+			else {
+				table[i][j] = min + 1;
+				
+			}
+		}
+	}
+	
+	
+	
+
+	//printing grid
+	for(int i = 0; i<t.length(); i++ )
+	{
+		for(int j = 0; j<s.length();j++) {
+			System.out.print(table[i][j] + " ");
+		}
+		System.out.println();
+	}
+		
+
+	return table[s.length()-1][t.length()-1];
+		
+	}
+	
+
+  
+  public static void main(String args[]) {
+ //   Scanner scan = new Scanner(System.in);
+
+	  String s = "editing";
+		String t = "distance";
+    System.out.println(EditDistance(s, t));
+  }
+
+}
